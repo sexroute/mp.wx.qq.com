@@ -25,6 +25,8 @@ function DownloadAudio(aoAudioObj)
             url: loAudioObj.url,
             saveAs: false,
             tag: loAudioObj.id,
+            user: aoAudioObj.user,
+            durl: null,
         });
     }
 }
@@ -65,9 +67,16 @@ function getAudioMsgList()
                 if (lnID && (lnID > __gLastMsgId))
                 {
                     //2.is audio
+                    loUserObj = $(".remark_name", loMsgObj);
+                    lstrUserName = "";
+                    if (loUserObj && loUserObj.length > 0)
+                    {
+                        lstrUserName = loUserObj[0].innerText;
+                    }
                     loTaskObj = {
                         id: lnID,
-                        url: lstrDownloadUrl
+                        url: lstrDownloadUrl,
+                        user: lstrUserName,
                     };
                     __gShouldTreatMsgList.push(loTaskObj);
                 }
