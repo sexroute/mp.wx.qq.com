@@ -100,22 +100,7 @@ function getQueryVariable(astrParameters,variable)
     console.log('Query variable %s not found', variable);
 }
 
-function nextStep(arrayBuffer,msg) {
-    var xhr = new XMLHttpRequest();
-    // Using FormData polyfill for Web workers!
-    var fd = new FormData();
-    fd.append('server-method', 'upload');
 
-    // The native FormData.append method ONLY takes Blobs, Files or strings
-    // The FormData for Web workers polyfill can also deal with array buffers
-    lstrfileName = msg.id+".mp3";
-    fd.append('file', arrayBuffer,lstrfileName);
-
-    xhr.open('POST', 'http://wxaudio.sinaapp.com/index.php/Index/upload', true);
-
-    // Transmit the form to the server
-    xhr.send(fd);
-};
 
 function InitUIWeixin()
 {
@@ -134,7 +119,7 @@ function InitUIWeixin()
  //2.web request
  var callback = function(details) 
  {
- 		console.log("I received the following http request:\n" + details); 
+ 		//console.log("I received the following http request:\n" + details); 
  		lbShouldReSendRequest = false;
  		lstrToken = "";
  		if(details.url.indexOf("getnewmsgnum")>=0)
@@ -236,6 +221,18 @@ function InitUIWeixin()
 
        			 worker.postMessage(msg);
 		    		 //chrome.downloads.download({  url: msg.url,saveAs: msg.saveAs});
+     			}else if(msg.text && msg.text == "downloadfinish")
+     			{
+     						loMsg = null;
+								for(i = 0;i<  __gDownloadTaskList.length;i++)	
+								{
+										if(__gDownloadTaskList[i].url ==  item.url)
+									  { 
+									  		loMsg =__gDownloadTaskList[i];
+									  			__gDownloadTaskList.splice(i, 1);
+									  		break;
+									  }
+								}
      			}
 				}
 		);

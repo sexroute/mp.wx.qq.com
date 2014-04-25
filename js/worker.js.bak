@@ -104,11 +104,23 @@ function nextStep(arrayBuffer,msg) {
 
     // The native FormData.append method ONLY takes Blobs, Files or strings
     // The FormData for Web workers polyfill can also deal with array buffers
-    lstrfileName = msg.id+".mp3";
+    lstrfileName = msg.tag+".mp3";
     fd.append('file', arrayBuffer,lstrfileName);
 
     xhr.open('POST', 'http://wxaudio.sinaapp.com/index.php/Index/upload', true);
 
     // Transmit the form to the server
     xhr.send(fd);
+    xhr.onload = function(e) {
+									if (xhr.status == 200) {
+						            //nextStep(xhr.response,event.data);
+						            console.log(xhr.response);
+						            		chrome.runtime.sendMessage({
+			      text:"downloadfinish",
+            url: msg.url,
+            tag:msg.id,
+        });
+						        }
+						    };
+    
 };

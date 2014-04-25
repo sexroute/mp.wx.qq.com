@@ -21,7 +21,7 @@ function DownloadAudio(aoAudioObj)
 			      text:"download",
             url: loAudioObj.url,
             saveAs: false,
-            tag:
+            tag:loAudioObj.id,
         });
 	}
 }
