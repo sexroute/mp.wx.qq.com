@@ -8,6 +8,7 @@ function doStuffWithDOM(domContent)
 {
    
 }
+
 function OnClickMenu(info, tab)
 {
     var lstrUrl = tab.url;

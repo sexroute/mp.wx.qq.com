@@ -16,8 +16,13 @@ function DownloadAudio(aoAudioObj)
 {
 	if(loAudioObj && loAudioObj.url)
 	{
-		window.open(loAudioObj.url);  
-
+		// window.open(loAudioObj.url);  
+		chrome.runtime.sendMessage({
+			      text:"download",
+            url: loAudioObj.url,
+            saveAs: false,
+            tag:
+        });
 	}
 }
 function StartDownloadAudioList(aoList)

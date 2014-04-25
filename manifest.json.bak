@@ -24,7 +24,7 @@
         "downloads",
         "tabs",
         "webRequestBlocking", 
-        "webRequest"      
+        "webRequest"   //注意这里一定要写     
    ],
    
    "icons": 
