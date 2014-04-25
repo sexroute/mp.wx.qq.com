@@ -253,18 +253,19 @@ function InitUIWeixin()
                 worker.onmessage = function (oEvent)
                 {
 
-                    loResponse = JSON.parse(oEvent.data);
-                    if (loResponse && loResponse.url)
+                    loMsg = (oEvent.data);
+                    if (loMsg && loMsg.url)
                     {
+                        loMsg.durl = JSON.parse(loMsg.durl);
                         for (i = 0; i < __gDownloadTaskList.length; i++)
                         {
-                            if (__gDownloadTaskList[i].url == loResponse.url)
+                            if (__gDownloadTaskList[i].url == loMsg.url)
                             {
                                 __gDownloadTaskList.splice(i, 1);
                                 break;
                             }
                         }
-                        console.log(loResponse.url);
+                        console.log(loMsg.durl.url);
                     }
 
                 };

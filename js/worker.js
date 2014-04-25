@@ -132,13 +132,19 @@ function nextStep(arrayBuffer, msg)
 
     // Transmit the form to the server
     xhr.send(fd);
-    xhr.onload = function (e)
+
+    xhr.onload = function (msg)
     {
-        if (xhr.status == 200)
+        return function (e)
         {
-            console.log(xhr.response);
-            postMessage(xhr.response);
-        }
-    };
+            if (xhr.status == 200)
+            {
+
+                console.log(xhr.response);
+                msg.durl = xhr.response;
+                postMessage(msg);
+            }
+        };
+    }(msg);
 
 };

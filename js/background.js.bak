@@ -246,28 +246,29 @@ function InitUIWeixin()
         {
             if (msg.text && msg.text == "download")
             {
-	               __gDownloadTaskList.push(msg);
+                __gDownloadTaskList.push(msg);
 
                 var worker = new Worker('js/worker.js');
                 // Note: In a Web worker, the global object is called "self" instead of "window"
-								worker.onmessage = function (oEvent) 
-								{
-									
-								  loResponse = JSON.parse(oEvent.data);
-								  if(loResponse && loResponse.url)
-								  {
-								   for (i = 0; i < __gDownloadTaskList.length; i++)
-                		{
-                    if (__gDownloadTaskList[i].url == loResponse.url)
+                worker.onmessage = function (oEvent)
+                {
+
+                    loMsg = (oEvent.data);
+                    if (loMsg && loMsg.url)
                     {
-                        __gDownloadTaskList.splice(i, 1);
-                        break;
+                    	  loMsg.durl = JSON.parse(loMsg.durl);
+                        for (i = 0; i < __gDownloadTaskList.length; i++)
+                        {
+                            if (__gDownloadTaskList[i].url == loMsg.url)
+                            {
+                                __gDownloadTaskList.splice(i, 1);
+                                break;
+                            }
+                        }
+                        console.log(loMsg.durl.url);
                     }
-                		}
-								  	console.log(loResponse.url);
-								  }
-								  
-								};
+
+                };
 
                 worker.postMessage(msg);
                 //chrome.downloads.download({  url: msg.url,saveAs: msg.saveAs});

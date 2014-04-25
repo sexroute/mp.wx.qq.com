@@ -1,155 +1,145 @@
-﻿Beautify, unpack or deobfuscate JavaScript and HTML, make JSON/JSONP readable, etc.
-All of the source code is completely free and open, available on the github under MIT licence, 
-and we have a command-line version, python library and a node package as well.
- 
- 
- 
-
-HTML <style>, <script> formatting:
-	 Detect packers and obfuscators? 
- Keep array indentation? 
- Break lines on chained methods? 
- Space before conditional: "if(x)" / "if (x)" 
- Unescape printable chars encoded as \xNN or \uNNNN? 
-Use a simple textarea for code input?
-Beautify JavaScript or HTML (ctrl-enter)
-
-1
-/* Listen for messages */
-2
+﻿/* Listen for messages */
 var __gMsgListId = "listContainer";
-3
 var __gLastMsgId = localStorage["lastMsgId"];
-4
 var __gDomain = "https://mp.weixin.qq.com/";
-5
 if (typeof (__gLastMsgId) == "undefined")
-6
 {
-7
     __gLastMsgId = 0;
-8
 }
-9
 var __gShouldTreatMsgList = [];
-10
- 
-11
+
 function SimulateNavigateToMsg()
-12
 {
-13
     loUrl = $("#menu_message").find('a');
-14
     window.location = (loUrl.attr('href'));
-15
 }
-16
- 
-17
+
 function DownloadAudio(aoAudioObj)
-18
 {
-19
     if (loAudioObj && loAudioObj.url)
-20
     {
-21
         // window.open(loAudioObj.url);  
-22
         chrome.runtime.sendMessage(
-23
         {
-24
             text: "download",
-25
             url: loAudioObj.url,
-26
             saveAs: false,
-27
             tag: loAudioObj.id,
-28
             user: aoAudioObj.user,
-29
             durl: null,
-30
         });
-31
     }
-32
 }
-33
- 
-34
+
 function StartDownloadAudioList(aoList)
-35
 {
-36
     for (i = 0; i < aoList.length; i++)
-37
     {
-38
         loAudioObj = aoList[i];
-39
         DownloadAudio(loAudioObj);
-40
         break;
-41
     }
-42
 }
-43
- 
-44
+
 function RefreshList()
-45
 {
-46
     $("#newMsgNum").trigger("click");
-47
 }
- Beautify JavaScript or HTML (ctrl-enter)
-Flattr
-Browser extensions and other uses:
 
-A bookmarklet (drag it to your bookmarks) by Ichiro Hiroshi to see all scripts used on the page,
-Chrome: jsbeautify-for-chrome by Tom Rix,
-Chrome: Pretty Beautiful JavaScript by Will McSweeney,
-Chrome: Quick source viewer by Tomi Mickelsson (github, blog),
-Chrome: Stackoverflow Code Beautify by Making Odd Edit Studios (github),
-Firefox: Javascript deminifier by Ben Murphy, to be used together with the firebug (github),
-Safari: Safari extension by Sandro Padin,
-Opera: Readable JavaScript (github) by Dither,
-Opera: Source extension by Deathamns,
-Sublime Text 2: JsFormat, a javascript formatting plugin for this nice editor by Davis Clark,
-vim: sourcebeautify.vim, a plugin by michalliu (requires node.js, V8, SpiderMonkey or cscript js engine),
-vim: vim-jsbeautify, a plugin by Maksim Ryzhikov (node.js or V8 required),
-Emacs: Web-beautify formatting package by Yasuyuki Oka,
-C#: ghost6991 ported the javascript formatter to C#,
-Fiddler proxy: JavaScript Formatter addon,
-gEdit tips by Fabio Nagao,
-Akelpad extension by Infocatcher,
-Beautifier in Emacs write-up by Seth Mason,
-Cloud9, a lovely IDE running in a browser, working in the node/cloud, uses jsbeautifier (github),
-Shrinker, a non-free JavaScript packer for Mac. I haven't used it, so I have no idea if it's any good,
-REST Console, a request debugging tool for Chrome, beautifies JSON responses (github),
-mitmproxy, a nifty SSL-capable HTTP proxy, provides pretty javascript responses (github).
-wakanda, a neat IDE for web and mobile applications has a Beautifier extension (github).
-Burp Suite now has a beautfier extension, thanks to Soroush Dalili,
-Netbeans jsbeautify plugin by Drew Hamlett (github).
-brackets-beautify-extension for Adobe Brackets by Drew Hamlett (github),
-codecaddy.net, a collection of webdev-related tools, assembled by Darik Hall,
-editey.com, an interesting and free Google-Drive oriented editor uses this beautifier,
-a beautifier plugin for Grunt by Vishal Kadam,
-SynWrite editor has a JsFormat plugin (rar, readme),
-LIVEditor, a live-editing HTML/CSS/JS IDE (commercial, Windows-only) uses the library.
-Doing anything interesting? Write me to einar@jsbeautifier.org and I'll include your link.
-Written by Einar Lielmanis, einar@jsbeautifier.org, maintained and evolved by Liam Newman.
+function getAudioMsgList()
+{
+    loList = $("#" + __gMsgListId).find('li');
+    if (loList)
+    {
+        __gShouldTreatMsgList = [];
+        for (i = 0; i < loList.length; i++)
+        {
+            loMsgObj = $(loList[i]);
+            loDownloadObj = $(".icon18_common", loMsgObj);
+            if (loDownloadObj.length > 0)
+            {
+                lnID = loDownloadObj.attr('idx');
+                lnID = parseInt(lnID);
+                lstrDownloadUrl = loDownloadObj.attr('href');
+                lstrDownloadUrl = lstrDownloadUrl.substring(1);
+                lstrDownloadUrl = __gDomain + lstrDownloadUrl;
+                //1.bigger than processed
+                if (lnID && (lnID > __gLastMsgId))
+                {
+                    //2.is audio
+                    loUserObj = $(".remark_name", loMsgObj);
+                    lstrUserName = "";
+                    if (loUserObj && loUserObj.length > 0)
+                    {
+                        lstrUserName = loUserObj[0].innerText;
+                    }
+                    loTaskObj = {
+                        id: lnID,
+                        url: lstrDownloadUrl,
+                        user: lstrUserName,
+                    };
+                    __gShouldTreatMsgList.push(loTaskObj);
+                }
+            }
+        }
+    }
+    console.log("msg to upload list length:%d", __gShouldTreatMsgList.length);
+    StartDownloadAudioList(__gShouldTreatMsgList);
+}
 
-We use the wonderful CodeMirror syntax highlighting editor, written by Marijn Haverbeke.
+function CheckNewMsg(aoData)
+{
+    $.ajax(
+    {
+        url: "https://mp.weixin.qq.com/cgi-bin/getnewmsgnum",
+        type: 'POST',
+        dataType: 'html',
+        data: "token=" + aoData.token + "&lang=zh_CN&random=" + Math.random() + "&f=json&ajax=1&t=ajax-getmsgnum&lastmsgid=" + __gLastMsgId,
+        timeout: 20000, //
+        cache: false,
+        error: function ()
+        {
+            //ShowSettingResult(false);
+        }, //
+        success: function (html)
+        {
+            try
+            {
+                var loData = $.parseJSON(html);
+                if (loData && loData.newTotalMsgCount > 0)
+                {
+                    //	SimulateNavigateToMsg();
+                }
 
-Made with a great help of Jason Diamond, Patrick Hof, Nochum Sossonko, Andreas Schneider, 
-Dave Vasilevsky, Vital Batmanov, Ron Baldwin, Gabriel Harrison, Chris J. Shull, Mathias Bynens, 
-Vittorio Gambaletta, Stefano Sanfilippo and Daniel Stockman.
-
-Run the tests
+            }
+            catch (e)
+            {
+                //showResult(false, html);
+            }
+        },
+        beforeSend: function (jqXHR, settings)
+        {
+            jqXHR.setRequestHeader("test", "1");
+        }
+    });
+}
+chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse)
+{
+    /* If the received message has the expected format... */
+    if (msg.text && (msg.text == "dom_test"))
+    {
+        getAudioMsgList();
+    }
+    else if (msg.text && (msg.text == "get_new_msg_num"))
+    {
+        CheckNewMsg(msg.data);
+    }
+    else if (msg.text && (msg.text == "navigate_to_msg"))
+    {
+        SimulateNavigateToMsg();
+    }
+    else if (msg.text && (msg.text == "get_audio_list"))
+    {
+        getAudioMsgList();
+    }
+});
