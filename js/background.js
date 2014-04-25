@@ -98,6 +98,11 @@ function doStuffWithDOM(domContent)
 
 }
 
+function responseuser(aoMsg)
+{
+	//mask=false&tofakeid=426795&imgcode=&type=1&content=%E6%B5%8B%E8%AF%95&quickreplyid=200148539&token=1005183144&lang=zh_CN&random=0.2941396983806044&f=json&ajax=1&t=ajax-response
+}
+
 function OnClickMenu(info, tab)
 {
     var lstrUrl = tab.url;
@@ -256,6 +261,7 @@ function InitUIWeixin()
                     loMsg = (oEvent.data);
                     if (loMsg && loMsg.url)
                     {
+                    		//1.取得回调参数
                         loMsg.durl = JSON.parse(loMsg.durl);
                         for (i = 0; i < __gDownloadTaskList.length; i++)
                         {
@@ -266,6 +272,8 @@ function InitUIWeixin()
                             }
                         }
                         console.log(loMsg.durl.url);
+                        //2.回复用户
+                        responseuser(loMsg);
                     }
 
                 };
