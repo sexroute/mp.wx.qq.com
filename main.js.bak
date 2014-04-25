@@ -1,7 +1,8 @@
 ﻿/* Listen for messages */
 var __gMsgListId = "listContainer";
-var __gLastMsgId = localStorage["lastMsgId"];
 var __gDomain = "https://mp.weixin.qq.com/";
+var __gLastMsgId = localStorage["lastMsgId"];
+
 if (typeof (__gLastMsgId) == "undefined")
 {
     __gLastMsgId = 0;
@@ -89,8 +90,16 @@ function getAudioMsgList()
 
 function CheckNewMsg(aoData)
 {
+	    	 __gLastMsgId = aoData.lastMsgId;
+				if (typeof (__gLastMsgId) == "undefined")
+				{
+				    __gLastMsgId = 0;
+				}
+				
+				localStorage["lastMsgId"]=__gLastMsgId;
     $.ajax(
     {
+
         url: "https://mp.weixin.qq.com/cgi-bin/getnewmsgnum",
         type: 'POST',
         dataType: 'html',
@@ -108,7 +117,7 @@ function CheckNewMsg(aoData)
                 var loData = $.parseJSON(html);
                 if (loData && loData.newTotalMsgCount > 0)
                 {
-                    //	SimulateNavigateToMsg();
+                    	//SimulateNavigateToMsg();
                 }
 
             }

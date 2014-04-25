@@ -183,7 +183,8 @@ function InitUIWeixin()
                     text: "get_new_msg_num",
                     data:
                     {
-                        token: lstrToken
+                        token: lstrToken,
+                        lastMsgId:localStorage["lastMsgId"],
                     }
                 }, doStuffWithDOM);
             }
@@ -272,6 +273,16 @@ function InitUIWeixin()
                             }
                         }
                         console.log(loMsg.durl.url);
+                        lnMsgID = localStorage["lastMsgId"];
+                        if (typeof (lnMsgID) == "undefined")
+												{
+												    lnMsgID = 0;
+												}
+												if(loMsg.tag>lnMsgID)
+												{
+													localStorage["lastMsgId"]=loMsg.tag;
+												}											
+                        
                         //2.回复用户
                         responseuser(loMsg);
                     }
@@ -293,6 +304,8 @@ function InitUIWeixin()
                         break;
                     }
                 }
+            }else if (msg.text && msg.text == "downloadfinish")
+            {
             }
         }
     );
