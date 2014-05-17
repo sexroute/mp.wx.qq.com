@@ -2,7 +2,7 @@
 var __gMsgListId = "listContainer";
 var __gLastMsgId = localStorage["lastMsgId"];
 var __gDomain = "https://mp.weixin.qq.com/";
-
+var __gtoken = 0;
 if (typeof (__gLastMsgId) == "undefined")
 {
     __gLastMsgId = 0;
@@ -32,6 +32,8 @@ function DownloadAudio(aoAudioObj)
             tag: loAudioObj.id,
             user: aoAudioObj.user,
             durl: null,
+            fakeid:loAudioObj.fakeid,
+            token:loAudioObj.token,
             tabid:0,
         });
     }
@@ -52,7 +54,7 @@ function RefreshList()
     $("#newMsgNum").trigger("click");
 }
 
-function getAudioMsgList()
+function getAudioMsgList(anToken)
 {
     loList = $("#" + __gMsgListId).find('li');
     __gLastMsgId = localStorage["lastMsgId"];
@@ -80,14 +82,18 @@ function getAudioMsgList()
                     //2.is audio
                     loUserObj = $(".remark_name", loMsgObj);
                     lstrUserName = "";
+                    $lstrFakeID = "";
                     if (loUserObj && loUserObj.length > 0)
                     {
                         lstrUserName = loUserObj[0].innerText;
+                        $lstrFakeID = loUserObj.attr('data-fakeid');
                     }
                     loTaskObj = {
                         id: lnID,
                         url: lstrDownloadUrl,
                         user: lstrUserName,
+                        fakeid:$lstrFakeID,
+                        token:__gtoken,
                     };
                     __gShouldTreatMsgList.push(loTaskObj);
                 }
@@ -110,9 +116,11 @@ function CheckNewMsg(aoData)
     {
         __gLastMsgId = 0;
     }
-
+    __gtoken = aoData.token;
+    localStorage["lastToken"] = __gtoken;
     $.ajax(
     {
+
         url: "https://mp.weixin.qq.com/cgi-bin/getnewmsgnum",
         type: 'POST',
         dataType: 'html',
@@ -133,7 +141,7 @@ function CheckNewMsg(aoData)
 
                     //1.get audio list
                     SimulateNavigateToMsg();
-                    getAudioMsgList();
+                    getAudioMsgList(__gtoken);
                 }
 
             }
@@ -183,7 +191,25 @@ function CheckMsgListTabTimerFunc()
 
 function ResponseToUser(aoMsg)
 {
-    Console.writeln("test");
+    var xmlHttp = new XMLHttpRequest();
+    lnToken = localStorage["lastToken"];
+    $lstrContent = "mask=false&tofakeid="+aoMsg.fakeid+"&imgcode=&type=1&content="+aoMsg.durl.url+"&quickreplyid="+aoMsg.tag+"&token="+lnToken+"&lang=zh_CN&random="+ Math.random() +"&f=json&ajax=1&t=ajax-response";
+    xmlHttp.open("POST", "https://mp.weixin.qq.com/cgi-bin/singlesend", true);
+     xmlHttp.setRequestHeader("Content-Type","application/x-www-form-urlencoded;");  //用POST的时候一定要有
+    xmlHttp.send($lstrContent);
+    xmlHttp.onload = function (msg)
+    {
+        return function (e)
+        {
+            if (xmlHttp.status == 200)
+            {
+
+                console.log(xmlHttp.response);
+
+
+            }
+        };
+    }(aoMsg);
 }
 chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse)
 {
@@ -218,6 +244,10 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse)
         {
             localStorage["lastMsgId"] = loMsg.tag;
         }
-        ResponseToUser(loMsg);
+        if(loMsg.durl)
+        {
+            ResponseToUser(loMsg);
+        }
+
     }
 });
