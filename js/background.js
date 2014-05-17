@@ -144,7 +144,7 @@ function InitUIWeixin()
     chrome.contextMenus.onClicked.addListener(OnClickMenu);
 
     //2.web request
-    var callback = function (details)
+    var http_hook_callback = function (details)
     {
         //console.log("I received the following http request:\n" + details); 
         lbShouldReSendRequest = false;
@@ -190,12 +190,13 @@ function InitUIWeixin()
 
         }
     };
-    var filter = {
+    var http_hook_filter =
+    {
         urls: ["*://*.qq.com/*"]
     };
     var opt_extraInfoSpec = ["blocking", "requestHeaders"];
     chrome.webRequest.onBeforeSendHeaders.addListener(
-        callback, filter, opt_extraInfoSpec);
+        http_hook_callback, http_hook_filter, opt_extraInfoSpec);
 
     //3.load completed,get audio list
     chrome.tabs.onUpdated.addListener(function (tabId, changeInfo)

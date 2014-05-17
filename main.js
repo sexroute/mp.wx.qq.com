@@ -123,6 +123,10 @@ function CheckNewMsg(aoData)
         }
     });
 }
+function IsCurrentInMsgList()
+{
+    return false;
+}
 chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse)
 {
     /* If the received message has the expected format... */

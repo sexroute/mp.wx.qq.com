@@ -1,15 +1,4 @@
-/*
- * FormData for XMLHttpRequest 2  -  Polyfill for Web Worker  (c) 2012 Rob W
- * License: Creative Commons BY - http://creativecommons.org/licenses/by/3.0/
- * - append(name, value[, filename])
- * - toString: Returns an ArrayBuffer object
- *
- * Specification: http://www.w3.org/TR/XMLHttpRequest/#formdata
- *                http://www.w3.org/TR/XMLHttpRequest/#the-send-method
- * The .append() implementation also accepts Uint8Array and ArrayBuffer objects
- * Web Workers do not natively support FormData:
- *                http://dev.w3.org/html5/workers/#apis-available-to-workers
- **/
+
 (function ()
 {
     // Export variable to the global scope
