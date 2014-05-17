@@ -2,6 +2,7 @@
 var __gMsgListId = "listContainer";
 var __gLastMsgId = localStorage["lastMsgId"];
 var __gDomain = "https://mp.weixin.qq.com/";
+
 if (typeof (__gLastMsgId) == "undefined")
 {
     __gLastMsgId = 0;
@@ -31,6 +32,7 @@ function DownloadAudio(aoAudioObj)
             tag: loAudioObj.id,
             user: aoAudioObj.user,
             durl: null,
+            tabid:0,
         });
     }
 }
@@ -53,6 +55,11 @@ function RefreshList()
 function getAudioMsgList()
 {
     loList = $("#" + __gMsgListId).find('li');
+    __gLastMsgId = localStorage["lastMsgId"];
+    if(typeof (__gLastMsgId)=="undefined")
+    {
+        __gLastMsgId = 0;
+    }
     if (loList)
     {
         __gShouldTreatMsgList = [];
@@ -96,6 +103,12 @@ function CheckNewMsg(aoData)
     if(!IsCurrentInMsgList())
     {
         SimulateNavigateToMsg();
+    }
+
+    __gLastMsgId = localStorage["lastMsgId"];
+    if(typeof (__gLastMsgId) == "undefined")
+    {
+        __gLastMsgId = 0;
     }
 
     $.ajax(
@@ -167,6 +180,11 @@ function CheckMsgListTabTimerFunc()
     }
     window.setTimeout(CheckMsgListTabTimerFunc,3000);
 }
+
+function ResponseToUser(aoMsg)
+{
+    Console.writeln("test");
+}
 chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse)
 {
     /* If the received message has the expected format... */
@@ -188,5 +206,18 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse)
     }else if(msg.text && (msg.text == "init_check_msg_list_timer"))
     {
        CheckMsgListTabTimerFunc();
+    }else if(msg.text && (msg.text == "audio_downloaded"))
+    {
+        loMsg = msg.data;
+        lnID = localStorage["lastMsgId"];
+        if(typeof(lnID)=="undefined")
+        {
+            localStorage["lastMsgId"] = 0;
+        }
+        if(loMsg.tag >= lnID)
+        {
+            localStorage["lastMsgId"] = loMsg.tag;
+        }
+        ResponseToUser(loMsg);
     }
 });

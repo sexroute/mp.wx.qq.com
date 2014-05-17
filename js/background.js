@@ -260,8 +260,22 @@ function InitUIWeixin()
     chrome.runtime.onMessage.addListener(
         function (msg, sender, sendResponse)
         {
+            msg.tabid = sender.tab.id;
             if (msg.text && msg.text == "download")
             {
+                for (i = 0; i < __gDownloadTaskList.length; i++)
+                {
+                    //already in download
+                    if (__gDownloadTaskList[i].url == msg.url)
+                    {
+                        chrome.tabs.sendMessage(msg.tabid,
+                            {
+                                text: "audio_downloaded",
+                                data: msg,
+                            }, doStuffWithDOM);
+                       return;
+                    }
+                }
                 __gDownloadTaskList.push(msg);
 
                 var worker = new Worker('js/worker.js');
@@ -279,12 +293,28 @@ function InitUIWeixin()
                             if (__gDownloadTaskList[i].url == loMsg.url)
                             {
                                 __gDownloadTaskList.splice(i, 1);
+                                lnMaxMsgId = localStorage["lastMsgId"];
+                                if(typeof (lnMaxMsgId) == "undefined")
+                                {
+                                    lnMaxMsgId = 0;
+                                    localStorage["lastMsgId"] =0;
+                                }
+                                if(loMsg.tag>= lnMaxMsgId)
+                                {
+                                    //mark msg downloaded
+                                    chrome.tabs.sendMessage(msg.tabid,
+                                        {
+                                            text: "audio_downloaded",
+                                            data: msg,
+                                        }, doStuffWithDOM);
+                                    localStorage["lastMsgId"] = loMsg.tag;
+                                }
                                 break;
                             }
                         }
                         console.log(loMsg.durl.url);
                         //2.回复用户
-                        responseuser(loMsg);
+
                     }
 
                 };
