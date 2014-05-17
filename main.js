@@ -10,8 +10,12 @@ var __gShouldTreatMsgList = [];
 
 function SimulateNavigateToMsg()
 {
-    loUrl = $("#menu_message").find('a');
-    window.location = (loUrl.attr('href'));
+    loUrl = $("#menu_message").find('a').attr('href');
+    if(typeof(loUrl)!="undefined")
+    {
+        loUrl =  loUrl.replace("count=20","count=10000");
+    }
+    window.location = (loUrl);
 }
 
 function DownloadAudio(aoAudioObj)
@@ -145,7 +149,13 @@ function IsCurrentInMsgList()
     }
     if(lstrCurrentUrl.indexOf(loUrl)<0)
     {
-        return false;
+        loUrl =  loUrl.replace("count=20","count=10000");
+
+        if(lstrCurrentUrl.indexOf(loUrl)<0)
+        {
+            return false;
+        }
+
     }
     return true;
 }
