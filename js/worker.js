@@ -91,6 +91,7 @@ self.onmessage = function (event)
 {
     var msg = event.data; // From the background page
     var xhr = new XMLHttpRequest();
+
     xhr.open('GET', msg.url, true);
 
     // Response type arraybuffer - XMLHttpRequest 2

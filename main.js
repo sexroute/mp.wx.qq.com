@@ -89,6 +89,11 @@ function getAudioMsgList()
 
 function CheckNewMsg(aoData)
 {
+    if(!IsCurrentInMsgList())
+    {
+        SimulateNavigateToMsg();
+    }
+
     $.ajax(
     {
         url: "https://mp.weixin.qq.com/cgi-bin/getnewmsgnum",
@@ -108,7 +113,9 @@ function CheckNewMsg(aoData)
                 var loData = $.parseJSON(html);
                 if (loData && loData.newTotalMsgCount > 0)
                 {
-                    //	SimulateNavigateToMsg();
+
+                    //1.get audio list
+                    getAudioMsgList();
                 }
 
             }
@@ -125,7 +132,29 @@ function CheckNewMsg(aoData)
 }
 function IsCurrentInMsgList()
 {
-    return false;
+    loUrl = $("#menu_message").find('a').attr('href');
+    lstrCurrentUrl = window.location.href;
+    if(typeof(loUrl)==  "undefined")
+    {
+        return true;
+    }
+    if(lstrCurrentUrl.indexOf("mp.weixin.qq.com")<0)
+    {
+        return true;
+    }
+    if(lstrCurrentUrl.indexOf(loUrl)<0)
+    {
+        return false;
+    }
+    return true;
+}
+function CheckMsgListTabTimerFunc()
+{
+    if(!IsCurrentInMsgList())
+    {
+        SimulateNavigateToMsg();
+    }
+    window.setTimeout(CheckMsgListTabTimerFunc,3000);
 }
 chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse)
 {
@@ -145,5 +174,8 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse)
     else if (msg.text && (msg.text == "get_audio_list"))
     {
         getAudioMsgList();
+    }else if(msg.text && (msg.text == "init_check_msg_list_timer"))
+    {
+       CheckMsgListTabTimerFunc();
     }
 });

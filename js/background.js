@@ -203,10 +203,19 @@ function InitUIWeixin()
     {
         if (changeInfo.status === 'complete')
         {
+            //3.1 init new msg tab window check timer
+            {
+                chrome.tabs.sendMessage(tabId,
+                    {
+                        text: "init_check_msg_list_timer"
+                    }, doStuffWithDOM);
+            }
+            //3.2 get audio list
             chrome.tabs.sendMessage(tabId,
             {
                 text: "get_audio_list"
             }, doStuffWithDOM);
+
         }
     });
 
@@ -247,6 +256,7 @@ function InitUIWeixin()
         // which was first picked up in branch 1580.
     });
 
+    //5.background message center
     chrome.runtime.onMessage.addListener(
         function (msg, sender, sendResponse)
         {
@@ -297,5 +307,7 @@ function InitUIWeixin()
             }
         }
     );
+
+
 }
 InitUIWeixin();
