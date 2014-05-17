@@ -305,7 +305,7 @@ function InitUIWeixin()
                                     chrome.tabs.sendMessage(msg.tabid,
                                         {
                                             text: "audio_downloaded",
-                                            data: msg,
+                                            data: loMsg,
                                         }, doStuffWithDOM);
                                     localStorage["lastMsgId"] = loMsg.tag;
                                 }
