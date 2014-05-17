@@ -91,11 +91,11 @@ self.onmessage = function (event)
 {
     var msg = event.data; // From the background page
     var xhr = new XMLHttpRequest();
-
+    //xhr.responseType = 'arraybuffer';
     xhr.open('GET', msg.url, true);
 
     // Response type arraybuffer - XMLHttpRequest 2
-    xhr.responseType = 'arraybuffer';
+    xhr.responseType = "blob";
     xhr.onload = function (e)
     {
         if (xhr.status == 200)

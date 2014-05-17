@@ -115,6 +115,7 @@ function CheckNewMsg(aoData)
                 {
 
                     //1.get audio list
+                    SimulateNavigateToMsg();
                     getAudioMsgList();
                 }
 
