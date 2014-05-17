@@ -34,7 +34,7 @@ function DownloadAudio(aoAudioObj)
             durl: null,
             fakeid:loAudioObj.fakeid,
             token:loAudioObj.token,
-            tabid:0,
+            tabid:0
         });
     }
 }
@@ -45,7 +45,7 @@ function StartDownloadAudioList(aoList)
     {
         loAudioObj = aoList[i];
         DownloadAudio(loAudioObj);
-        break;
+      //  break;
     }
 }
 
@@ -65,7 +65,7 @@ function getAudioMsgList(anToken)
     if (loList)
     {
         __gShouldTreatMsgList = [];
-        for (i = 0; i < loList.length; i++)
+        for (var i = loList.length; i >=0 ; i--)
         {
             $lstrClass = loList.attr('class');
 
@@ -79,7 +79,7 @@ function getAudioMsgList(anToken)
                 lstrDownloadUrl = lstrDownloadUrl.substring(1);
                 lstrDownloadUrl = __gDomain + lstrDownloadUrl;
                 //1.bigger than processed
-                if (lnID )
+                if (lnID && (lnID>__gLastMsgId) )
                 {
                     //2.is audio
                     loUserObj = $(".remark_name", loMsgObj);
@@ -95,7 +95,7 @@ function getAudioMsgList(anToken)
                         url: lstrDownloadUrl,
                         user: lstrUserName,
                         fakeid:$lstrFakeID,
-                        token:__gtoken,
+                        token:__gtoken
                     };
                     __gShouldTreatMsgList.push(loTaskObj);
                 }

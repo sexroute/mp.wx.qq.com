@@ -270,8 +270,8 @@ function InitUIWeixin()
                     {
                         chrome.tabs.sendMessage(msg.tabid,
                             {
-                                text: "audio_downloaded",
-                                data: msg,
+                                text: "audio_downloading",
+                                data: msg
                             }, doStuffWithDOM);
                        return;
                     }
@@ -299,13 +299,13 @@ function InitUIWeixin()
                                     lnMaxMsgId = 0;
                                     localStorage["lastMsgId"] =0;
                                 }
-                                if(loMsg.tag>= lnMaxMsgId)
+                               // if(loMsg.tag>= lnMaxMsgId)
                                 {
                                     //mark msg downloaded
                                     chrome.tabs.sendMessage(msg.tabid,
                                         {
                                             text: "audio_downloaded",
-                                            data: loMsg,
+                                            data: loMsg
                                         }, doStuffWithDOM);
                                     localStorage["lastMsgId"] = loMsg.tag;
                                 }
