@@ -67,6 +67,8 @@ function getAudioMsgList(anToken)
         __gShouldTreatMsgList = [];
         for (i = 0; i < loList.length; i++)
         {
+            $lstrClass = loList.attr('class');
+
             loMsgObj = $(loList[i]);
             loDownloadObj = $(".icon18_common", loMsgObj);
             if (loDownloadObj.length > 0)
@@ -77,7 +79,7 @@ function getAudioMsgList(anToken)
                 lstrDownloadUrl = lstrDownloadUrl.substring(1);
                 lstrDownloadUrl = __gDomain + lstrDownloadUrl;
                 //1.bigger than processed
-                if (lnID && (lnID > __gLastMsgId))
+                if (lnID )
                 {
                     //2.is audio
                     loUserObj = $(".remark_name", loMsgObj);
