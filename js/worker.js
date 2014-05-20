@@ -118,9 +118,9 @@ function nextStep(arrayBuffer, msg)
     lstrfileName =  msg.tag + "_"+ msg.fakeid+".mp3";
     fd.append('file', arrayBuffer, lstrfileName);//
     xhr.open('POST', 'http://wxaudio.sinaapp.com/index.php/Index/upload', true);
-//    lstrfileName =  msg.tag + "_"+ msg.fakeid+".mp3";
-//    fd.append('inputFile', arrayBuffer, lstrfileName);
-//    xhr.open('POST', 'http://barbie.sinaapp.com/index.php?mod=data&action=DealFile', true);
+
+    //fd.append('inputFile', arrayBuffer, lstrfileName);
+   // xhr.open('POST', 'http://barbie.sinaapp.com/index.php?mod=data&action=DealFile', true);
 
     // Transmit the form to the server
     xhr.send(fd);
