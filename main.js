@@ -1,273 +1,142 @@
-﻿/* Listen for messages */
-var __gMsgListId = "listContainer";
-var __gDomain = "https://mp.weixin.qq.com/";
-<<<<<<< HEAD
-var __gtoken = 0;
-=======
-var __gLastMsgId = localStorage["lastMsgId"];
-
->>>>>>> FETCH_HEAD
-if (typeof (__gLastMsgId) == "undefined")
+﻿
+(function ()
 {
-    __gLastMsgId = 0;
-}
-var __gShouldTreatMsgList = [];
+    // Export variable to the global scope
+    (this == undefined ? self : this)['FormData'] = FormData;
 
-function SimulateNavigateToMsg()
-{
-    loUrl = $("#menu_message").find('a').attr('href');
-    if(typeof(loUrl)!="undefined")
+    var ___send$rw = XMLHttpRequest.prototype.send;
+    XMLHttpRequest.prototype['send'] = function (data)
     {
-        loUrl =  loUrl.replace("count=20","count=10000");
-    }
-    window.location = (loUrl);
-}
-
-function DownloadAudio(aoAudioObj)
-{
-    if (loAudioObj && loAudioObj.url)
-    {
-        // window.open(loAudioObj.url);  
-        chrome.runtime.sendMessage(
+        if (data instanceof FormData)
         {
-            text: "download",
-            url: loAudioObj.url,
-            saveAs: false,
-            tag: loAudioObj.id,
-            user: aoAudioObj.user,
-            durl: null,
-            fakeid:loAudioObj.fakeid,
-            token:loAudioObj.token,
-            tabid:0
-        });
-    }
-}
-
-function StartDownloadAudioList(aoList)
-{
-    for (i = 0; i < aoList.length; i++)
-    {
-        loAudioObj = aoList[i];
-        DownloadAudio(loAudioObj);
-      //  break;
-    }
-}
-
-function RefreshList()
-{
-    $("#newMsgNum").trigger("click");
-}
-
-function getAudioMsgList(anToken)
-{
-    loList = $("#" + __gMsgListId).find('li');
-    __gLastMsgId = localStorage["lastMsgId"];
-    if(typeof (__gLastMsgId)=="undefined")
-    {
-        __gLastMsgId = 0;
-    }
-    if (loList)
-    {
-        __gShouldTreatMsgList = [];
-        for (var i = loList.length; i >=0 ; i--)
-        {
-            $lstrClass = loList.attr('class');
-
-            loMsgObj = $(loList[i]);
-            loDownloadObj = $(".icon18_common", loMsgObj);
-            if (loDownloadObj.length > 0)
-            {
-                lnID = loDownloadObj.attr('idx');
-                lnID = parseInt(lnID);
-                lstrDownloadUrl = loDownloadObj.attr('href');
-                lstrDownloadUrl = lstrDownloadUrl.substring(1);
-                lstrDownloadUrl = __gDomain + lstrDownloadUrl;
-                //1.bigger than processed
-                if (lnID && (lnID>__gLastMsgId) )
-                {
-                    //2.is audio
-                    loUserObj = $(".remark_name", loMsgObj);
-                    lstrUserName = "";
-                    $lstrFakeID = "";
-                    if (loUserObj && loUserObj.length > 0)
-                    {
-                        lstrUserName = loUserObj[0].innerText;
-                        $lstrFakeID = loUserObj.attr('data-fakeid');
-                    }
-                    loTaskObj = {
-                        id: lnID,
-                        url: lstrDownloadUrl,
-                        user: lstrUserName,
-                        fakeid:$lstrFakeID,
-                        token:__gtoken
-                    };
-                    __gShouldTreatMsgList.push(loTaskObj);
-                }
-            }
+            if (!data.__endedMultipart) data.__append('--' + data.boundary + '--\r\n');
+            data.__endedMultipart = true;
+            this.setRequestHeader('Content-Type', 'multipart/form-data; boundary=' + data.boundary);
+            data = new Uint8Array(data.data).buffer;
         }
-    }
-    console.log("msg to upload list length:%d", __gShouldTreatMsgList.length);
-    StartDownloadAudioList(__gShouldTreatMsgList);
-}
+        // Invoke original XHR.send
+        return ___send$rw.call(this, data);
+    };
 
-function CheckNewMsg(aoData)
-{
-<<<<<<< HEAD
-    if(!IsCurrentInMsgList())
+    function FormData()
     {
-        SimulateNavigateToMsg();
-    }
-
-    __gLastMsgId = localStorage["lastMsgId"];
-    if(typeof (__gLastMsgId) == "undefined")
-    {
-        __gLastMsgId = 0;
-    }
-    __gtoken = aoData.token;
-    localStorage["lastToken"] = __gtoken;
-=======
-	    	 __gLastMsgId = aoData.lastMsgId;
-				if (typeof (__gLastMsgId) == "undefined")
-				{
-				    __gLastMsgId = 0;
-				}
-				
-				localStorage["lastMsgId"]=__gLastMsgId;
->>>>>>> FETCH_HEAD
-    $.ajax(
-    {
-
-        url: "https://mp.weixin.qq.com/cgi-bin/getnewmsgnum",
-        type: 'POST',
-        dataType: 'html',
-        data: "token=" + aoData.token + "&lang=zh_CN&random=" + Math.random() + "&f=json&ajax=1&t=ajax-getmsgnum&lastmsgid=" + __gLastMsgId,
-        timeout: 20000, //
-        cache: false,
-        error: function ()
+        // Force a Constructor
+        if (!(this instanceof FormData)) return new FormData();
+        // Generate a random boundary - This must be unique with respect to the form's contents.
+        this.boundary = '------RWWorkerFormDataBoundary' + Math.random().toString(36);
+        var internal_data = this.data = [];
+        /**
+         * Internal method.
+         * @param inp String | ArrayBuffer | Uint8Array  Input
+         */
+        this.__append = function (inp)
         {
-            //ShowSettingResult(false);
-        }, //
-        success: function (html)
-        {
-            try
+            var i = 0,
+                len;
+            if (typeof inp === 'string')
             {
-                var loData = $.parseJSON(html);
-                if (loData && loData.newTotalMsgCount > 0)
-                {
-<<<<<<< HEAD
-
-                    //1.get audio list
-                    SimulateNavigateToMsg();
-                    getAudioMsgList(__gtoken);
-=======
-                    SimulateNavigateToMsg();
->>>>>>> FETCH_HEAD
-                }
-
+                for (len = inp.length; i < len; i++)
+                    internal_data.push(inp.charCodeAt(i) & 0xff);
             }
-            catch (e)
-            {
-                //showResult(false, html);
+            else if (inp && inp.byteLength)
+            { /*If ArrayBuffer or typed array */
+                if (!('byteOffset' in inp)) /* If ArrayBuffer, wrap in view */
+                    inp = new Uint8Array(inp);
+                for (len = inp.byteLength; i < len; i++)
+                    internal_data.push(inp[i] & 0xff);
             }
-        },
-        beforeSend: function (jqXHR, settings)
+        };
+    }
+    /**
+     * @param name     String                                  Key name
+     * @param value    String|Blob|File|Uint8Array|ArrayBuffer Value
+     * @param filename String                                  Optional File name (when value is not a string).
+     **/
+    FormData.prototype['append'] = function (name, value, filename)
+    {
+        if (this.__endedMultipart)
         {
-            jqXHR.setRequestHeader("test", "1");
+            // Truncate the closing boundary
+            this.data.length -= this.boundary.length + 6;
+            this.__endedMultipart = false;
         }
-    });
-}
-function IsCurrentInMsgList()
-{
-    loUrl = $("#menu_message").find('a').attr('href');
-    lstrCurrentUrl = window.location.href;
-    if(typeof(loUrl)==  "undefined")
-    {
-        return true;
-    }
-    if(lstrCurrentUrl.indexOf("mp.weixin.qq.com")<0)
-    {
-        return true;
-    }
-    if(lstrCurrentUrl.indexOf(loUrl)<0)
-    {
-        loUrl =  loUrl.replace("count=20","count=10000");
+        var valueType = Object.prototype.toString.call(value),
+            part = '--' + this.boundary + '\r\n' +
+                'Content-Disposition: form-data; name="' + name + '"';
 
-        if(lstrCurrentUrl.indexOf(loUrl)<0)
+        if (/^\[object (?:Blob|File)(?:Constructor)?\]$/.test(valueType))
         {
-            return false;
+            return this.append(name,
+                new Uint8Array(new FileReaderSync().readAsArrayBuffer(value)),
+                filename || value.name);
         }
+        else if (/^\[object (?:Uint8Array|ArrayBuffer)(?:Constructor)?\]$/.test(valueType))
+        {
+            part += '; filename="' + (filename || 'blob').replace(/"/g, '%22') + '"\r\n';
+            part += 'Content-Type: application/octet-stream\r\n\r\n';
+            this.__append(part);
+            this.__append(value);
+            part = '\r\n';
+        }
+        else
+        {
+            part += '\r\n\r\n' + value + '\r\n';
+        }
+        this.__append(part);
+    };
+})();
 
-    }
-    return true;
-}
-function CheckMsgListTabTimerFunc()
+// Note: In a Web worker, the global object is called "self" instead of "window"
+self.onmessage = function (event)
 {
-    if(!IsCurrentInMsgList())
+    var msg = event.data; // From the background page
+    var xhr = new XMLHttpRequest();
+    //xhr.responseType = 'arraybuffer';
+    xhr.open('GET', msg.url, true);
+
+    // Response type arraybuffer - XMLHttpRequest 2
+    xhr.responseType = "blob";
+    xhr.onload = function (e)
     {
-        SimulateNavigateToMsg();
-    }
-    window.setTimeout(CheckMsgListTabTimerFunc,3000);
-}
+        if (xhr.status == 200)
+        {
+            nextStep(xhr.response, event.data);
+        }
+    };
+    xhr.send();
+};
 
-function ResponseToUser(aoMsg)
+function nextStep(arrayBuffer, msg)
 {
-    var xmlHttp = new XMLHttpRequest();
-    lnToken = localStorage["lastToken"];
-    $lstrContent = "mask=false&tofakeid="+aoMsg.fakeid+"&imgcode=&type=1&content="+encodeURIComponent(aoMsg.durl.msg)+"&quickreplyid="+aoMsg.tag+"&token="+lnToken+"&lang=zh_CN&random="+ Math.random() +"&f=json&ajax=1&t=ajax-response";
-    xmlHttp.open("POST", "https://mp.weixin.qq.com/cgi-bin/singlesend", true);
-     xmlHttp.setRequestHeader("Content-Type","application/x-www-form-urlencoded;");  //用POST的时候一定要有
-    xmlHttp.send($lstrContent);
-    xmlHttp.onload = function (msg)
+    var xhr = new XMLHttpRequest();
+    // Using FormData polyfill for Web workers!
+    var fd = new FormData();
+    fd.append('server-method', 'upload');
+
+    // The native FormData.append method ONLY takes Blobs, Files or strings
+    // The FormData for Web workers polyfill can also deal with array buffers
+    lstrfileName =  msg.tag + "_"+ msg.fakeid+".mp3";
+    // fd.append('file', arrayBuffer, lstrfileName);//
+    xhr.open('POST', 'http://wxaudio.sinaapp.com/index.php/Index/upload', true);
+
+    //fd.append('inputFile', arrayBuffer, lstrfileName);
+    // xhr.open('POST', 'http://barbie.sinaapp.com/index.php?mod=data&action=DealFile', true);
+
+    // Transmit the form to the server
+    xhr.send(fd);
+
+    xhr.onload = function (msg)
     {
         return function (e)
         {
-            if (xmlHttp.status == 200)
+            if (xhr.status == 200)
             {
 
-                console.log(xmlHttp.response);
-
-
+                console.log(xhr.response);
+                msg.durl = xhr.response;
+                postMessage(msg);
             }
         };
-    }(aoMsg);
-}
-chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse)
-{
-    /* If the received message has the expected format... */
-    if (msg.text && (msg.text == "dom_test"))
-    {
-        getAudioMsgList();
-    }
-    else if (msg.text && (msg.text == "get_new_msg_num"))
-    {
-        CheckNewMsg(msg.data);
-    }
-    else if (msg.text && (msg.text == "navigate_to_msg"))
-    {
-        SimulateNavigateToMsg();
-    }
-    else if (msg.text && (msg.text == "get_audio_list"))
-    {
-        getAudioMsgList();
-    }else if(msg.text && (msg.text == "init_check_msg_list_timer"))
-    {
-       CheckMsgListTabTimerFunc();
-    }else if(msg.text && (msg.text == "audio_downloaded"))
-    {
-        loMsg = msg.data;
-        lnID = localStorage["lastMsgId"];
-        if(typeof(lnID)=="undefined")
-        {
-            localStorage["lastMsgId"] = 0;
-        }
-        if(loMsg.tag >= lnID)
-        {
-            localStorage["lastMsgId"] = loMsg.tag;
-        }
-        if(loMsg.durl)
-        {
-            ResponseToUser(loMsg);
-        }
+    }(msg);
 
-    }
-});
+};
