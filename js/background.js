@@ -312,7 +312,11 @@ function InitUIWeixin()
                                 break;
                             }
                         }
-                        console.log(loMsg.durl.msg);
+                        if(loMsg.durl.msg)
+                        {
+                            console.log(loMsg.durl.msg);
+                        }
+
                         //2.回复用户
 
                     }

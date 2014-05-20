@@ -25,17 +25,17 @@ function DownloadAudio(aoAudioObj)
     {
         // window.open(loAudioObj.url);  
         chrome.runtime.sendMessage(
-        {
-            text: "download",
-            url: loAudioObj.url,
-            saveAs: false,
-            tag: loAudioObj.id,
-            user: aoAudioObj.user,
-            durl: null,
-            fakeid:loAudioObj.fakeid,
-            token:loAudioObj.token,
-            tabid:0
-        });
+            {
+                text: "download",
+                url: loAudioObj.url,
+                saveAs: false,
+                tag: loAudioObj.id,
+                user: aoAudioObj.user,
+                durl: null,
+                fakeid:loAudioObj.fakeid,
+                token:loAudioObj.token,
+                tabid:0
+            });
     }
 }
 
@@ -45,7 +45,7 @@ function StartDownloadAudioList(aoList)
     {
         loAudioObj = aoList[i];
         DownloadAudio(loAudioObj);
-      //  break;
+        //  break;
     }
 }
 
@@ -121,42 +121,42 @@ function CheckNewMsg(aoData)
     __gtoken = aoData.token;
     localStorage["lastToken"] = __gtoken;
     $.ajax(
-    {
+        {
 
-        url: "https://mp.weixin.qq.com/cgi-bin/getnewmsgnum",
-        type: 'POST',
-        dataType: 'html',
-        data: "token=" + aoData.token + "&lang=zh_CN&random=" + Math.random() + "&f=json&ajax=1&t=ajax-getmsgnum&lastmsgid=" + __gLastMsgId,
-        timeout: 20000, //
-        cache: false,
-        error: function ()
-        {
-            //ShowSettingResult(false);
-        }, //
-        success: function (html)
-        {
-            try
+            url: "https://mp.weixin.qq.com/cgi-bin/getnewmsgnum",
+            type: 'POST',
+            dataType: 'html',
+            data: "token=" + aoData.token + "&lang=zh_CN&random=" + Math.random() + "&f=json&ajax=1&t=ajax-getmsgnum&lastmsgid=" + __gLastMsgId,
+            timeout: 20000, //
+            cache: false,
+            error: function ()
             {
-                var loData = $.parseJSON(html);
-                if (loData && loData.newTotalMsgCount > 0)
+                //ShowSettingResult(false);
+            }, //
+            success: function (html)
+            {
+                try
                 {
+                    var loData = $.parseJSON(html);
+                    if (loData && loData.newTotalMsgCount > 0)
+                    {
 
-                    //1.get audio list
-                    SimulateNavigateToMsg();
-                    getAudioMsgList(__gtoken);
+                        //1.get audio list
+                        SimulateNavigateToMsg();
+                        getAudioMsgList(__gtoken);
+                    }
+
                 }
-
-            }
-            catch (e)
+                catch (e)
+                {
+                    //showResult(false, html);
+                }
+            },
+            beforeSend: function (jqXHR, settings)
             {
-                //showResult(false, html);
+                jqXHR.setRequestHeader("test", "1");
             }
-        },
-        beforeSend: function (jqXHR, settings)
-        {
-            jqXHR.setRequestHeader("test", "1");
-        }
-    });
+        });
 }
 function IsCurrentInMsgList()
 {
@@ -197,7 +197,7 @@ function ResponseToUser(aoMsg)
     lnToken = localStorage["lastToken"];
     $lstrContent = "mask=false&tofakeid="+aoMsg.fakeid+"&imgcode=&type=1&content="+encodeURIComponent(aoMsg.durl.msg)+"&quickreplyid="+aoMsg.tag+"&token="+lnToken+"&lang=zh_CN&random="+ Math.random() +"&f=json&ajax=1&t=ajax-response";
     xmlHttp.open("POST", "https://mp.weixin.qq.com/cgi-bin/singlesend", true);
-     xmlHttp.setRequestHeader("Content-Type","application/x-www-form-urlencoded;");  //用POST的时候一定要有
+    xmlHttp.setRequestHeader("Content-Type","application/x-www-form-urlencoded;");  //用POST的时候一定要有
     xmlHttp.send($lstrContent);
     xmlHttp.onload = function (msg)
     {
@@ -233,7 +233,7 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse)
         getAudioMsgList();
     }else if(msg.text && (msg.text == "init_check_msg_list_timer"))
     {
-       CheckMsgListTabTimerFunc();
+        CheckMsgListTabTimerFunc();
     }else if(msg.text && (msg.text == "audio_downloaded"))
     {
         loMsg = msg.data;
