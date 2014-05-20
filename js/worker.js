@@ -116,7 +116,7 @@ function nextStep(arrayBuffer, msg)
     // The native FormData.append method ONLY takes Blobs, Files or strings
     // The FormData for Web workers polyfill can also deal with array buffers
     lstrfileName =  msg.tag + "_"+ msg.fakeid+".mp3";
-   // fd.append('file', arrayBuffer, lstrfileName);//
+    fd.append('file', arrayBuffer, lstrfileName);//
     xhr.open('POST', 'http://wxaudio.sinaapp.com/index.php/Index/upload', true);
 
     //fd.append('inputFile', arrayBuffer, lstrfileName);
