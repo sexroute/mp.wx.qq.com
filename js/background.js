@@ -100,16 +100,16 @@ function doStuffWithDOM(domContent)
 
 function responseuser(aoMsg)
 {
-    //mask=false&tofakeid=426795&imgcode=&type=1&content=%E6%B5%8B%E8%AF%95&quickreplyid=200148539&token=1005183144&lang=zh_CN&random=0.2941396983806044&f=json&ajax=1&t=ajax-response
+	//mask=false&tofakeid=426795&imgcode=&type=1&content=%E6%B5%8B%E8%AF%95&quickreplyid=200148539&token=1005183144&lang=zh_CN&random=0.2941396983806044&f=json&ajax=1&t=ajax-response
 }
 
 function OnClickMenu(info, tab)
 {
     var lstrUrl = tab.url;
     chrome.tabs.sendMessage(tab.id,
-        {
-            text: "dom_test"
-        }, doStuffWithDOM);
+    {
+        text: "dom_test"
+    }, doStuffWithDOM);
 }
 
 function getQueryVariable(astrParameters, variable)
@@ -133,12 +133,12 @@ function InitUIWeixin()
 {
     // chrome.contextMenus.removeAll();
     var radio1 = chrome.contextMenus.create(
-        {
-            "title": "微信测试",
-            "id": "wx",
-            "type": "normal",
-            "contexts": ["all"]
-        });
+    {
+        "title": "微信测试",
+        "id": "wx",
+        "type": "normal",
+        "contexts": ["all"]
+    });
 
     //1.menu     
     chrome.contextMenus.onClicked.addListener(OnClickMenu);
@@ -179,13 +179,13 @@ function InitUIWeixin()
                     __gGetNewMsgNumHeaders.push(details.requestHeaders[i]);
                 }
                 chrome.tabs.sendMessage(details.tabId,
+                {
+                    text: "get_new_msg_num",
+                    data:
                     {
-                        text: "get_new_msg_num",
-                        data:
-                        {
-                            token: lstrToken
-                        }
-                    }, doStuffWithDOM);
+                        token: lstrToken
+                    }
+                }, doStuffWithDOM);
             }
 
         }
@@ -212,9 +212,9 @@ function InitUIWeixin()
             }
             //3.2 get audio list
             chrome.tabs.sendMessage(tabId,
-                {
-                    text: "get_audio_list"
-                }, doStuffWithDOM);
+            {
+                text: "get_audio_list"
+            }, doStuffWithDOM);
 
         }
     });
@@ -236,20 +236,20 @@ function InitUIWeixin()
         {
             lstrFileName = loMsg.tag + ".mp3";
             suggest(
-                {
-                    filename: lstrFileName,
-                    conflict_action: 'overwrite',
-                    conflictAction: 'overwrite'
-                });
+            {
+                filename: lstrFileName,
+                conflict_action: 'overwrite',
+                conflictAction: 'overwrite'
+            });
         }
         else
         {
             suggest(
-                {
-                    filename: item.filename,
-                    conflict_action: 'overwrite',
-                    conflictAction: 'overwrite'
-                });
+            {
+                filename: item.filename,
+                conflict_action: 'overwrite',
+                conflictAction: 'overwrite'
+            });
         }
         // conflict_action was renamed to conflictAction in
         // http://src.chromium.org/viewvc/chrome?view=rev&revision=214133
@@ -273,7 +273,7 @@ function InitUIWeixin()
                                 text: "audio_downloading",
                                 data: msg
                             }, doStuffWithDOM);
-                        return;
+                       return;
                     }
                 }
                 __gDownloadTaskList.push(msg);
@@ -286,7 +286,7 @@ function InitUIWeixin()
                     loMsg = (oEvent.data);
                     if (loMsg && loMsg.url)
                     {
-                        //1.取得回调参数
+                    		//1.取得回调参数
                         loMsg.durl = JSON.parse(loMsg.durl);
                         for (i = 0; i < __gDownloadTaskList.length; i++)
                         {
@@ -299,7 +299,7 @@ function InitUIWeixin()
                                     lnMaxMsgId = 0;
                                     localStorage["lastMsgId"] =0;
                                 }
-                                if(loMsg.tag>= lnMaxMsgId)
+                               // if(loMsg.tag>= lnMaxMsgId)
                                 {
                                     //mark msg downloaded
                                     chrome.tabs.sendMessage(msg.tabid,
