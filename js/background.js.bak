@@ -144,7 +144,7 @@ function InitUIWeixin()
     chrome.contextMenus.onClicked.addListener(OnClickMenu);
 
     //2.web request
-    var http_hook_callback = function (details)
+    var callback = function (details)
     {
         //console.log("I received the following http request:\n" + details); 
         lbShouldReSendRequest = false;
@@ -184,39 +184,29 @@ function InitUIWeixin()
                     data:
                     {
                         token: lstrToken,
-                        lastMsgId:localStorage["lastMsgId"],
+                        lastMsgId:
                     }
                 }, doStuffWithDOM);
             }
 
         }
     };
-    var http_hook_filter =
-    {
+    var filter = {
         urls: ["*://*.qq.com/*"]
     };
     var opt_extraInfoSpec = ["blocking", "requestHeaders"];
     chrome.webRequest.onBeforeSendHeaders.addListener(
-        http_hook_callback, http_hook_filter, opt_extraInfoSpec);
+        callback, filter, opt_extraInfoSpec);
 
     //3.load completed,get audio list
     chrome.tabs.onUpdated.addListener(function (tabId, changeInfo)
     {
         if (changeInfo.status === 'complete')
         {
-            //3.1 init new msg tab window check timer
-            {
-                chrome.tabs.sendMessage(tabId,
-                    {
-                        text: "init_check_msg_list_timer"
-                    }, doStuffWithDOM);
-            }
-            //3.2 get audio list
             chrome.tabs.sendMessage(tabId,
             {
                 text: "get_audio_list"
             }, doStuffWithDOM);
-
         }
     });
 
@@ -257,26 +247,11 @@ function InitUIWeixin()
         // which was first picked up in branch 1580.
     });
 
-    //5.background message center
     chrome.runtime.onMessage.addListener(
         function (msg, sender, sendResponse)
         {
-            msg.tabid = sender.tab.id;
             if (msg.text && msg.text == "download")
             {
-                for (i = 0; i < __gDownloadTaskList.length; i++)
-                {
-                    //already in download
-                    if (__gDownloadTaskList[i].url == msg.url)
-                    {
-                        chrome.tabs.sendMessage(msg.tabid,
-                            {
-                                text: "audio_downloading",
-                                data: msg
-                            }, doStuffWithDOM);
-                       return;
-                    }
-                }
                 __gDownloadTaskList.push(msg);
 
                 var worker = new Worker('js/worker.js');
@@ -294,28 +269,9 @@ function InitUIWeixin()
                             if (__gDownloadTaskList[i].url == loMsg.url)
                             {
                                 __gDownloadTaskList.splice(i, 1);
-                                lnMaxMsgId = localStorage["lastMsgId"];
-                                if(typeof (lnMaxMsgId) == "undefined")
-                                {
-                                    lnMaxMsgId = 0;
-                                    localStorage["lastMsgId"] =0;
-                                }
-                               // if(loMsg.tag>= lnMaxMsgId)
-                                {
-                                    //mark msg downloaded
-                                    chrome.tabs.sendMessage(msg.tabid,
-                                        {
-                                            text: "audio_downloaded",
-                                            data: loMsg
-                                        }, doStuffWithDOM);
-                                    localStorage["lastMsgId"] = loMsg.tag;
-                                }
                                 break;
                             }
                         }
-<<<<<<< HEAD
-                        console.log(loMsg.durl.msg);
-=======
                         console.log(loMsg.durl.url);
                         lnMsgID = localStorage["lastMsgId"];
                         if (typeof (lnMsgID) == "undefined")
@@ -327,9 +283,8 @@ function InitUIWeixin()
 													localStorage["lastMsgId"]=loMsg.tag;
 												}											
                         
->>>>>>> FETCH_HEAD
                         //2.回复用户
-
+                        responseuser(loMsg);
                     }
 
                 };
@@ -354,7 +309,5 @@ function InitUIWeixin()
             }
         }
     );
-
-
 }
 InitUIWeixin();
