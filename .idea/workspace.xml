@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d1f6a590-52ce-488e-9638-a63b0dbe5644" name="Default" comment="" />
+    <list default="true" id="d1f6a590-52ce-488e-9638-a63b0dbe5644" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+    </list>
     <ignored path="mp.wx.qq.com.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="d1f6a590-52ce-488e-9638-a63b0dbe5644" time="1400684704443" ignored="false" />
+    <file path="/Dummy.txt" changelist="d1f6a590-52ce-488e-9638-a63b0dbe5644" time="1400687381898" ignored="false" />
     <file path="/main.js" changelist="d1f6a590-52ce-488e-9638-a63b0dbe5644" time="1400327366518" ignored="false" />
-    <file path="/background.js" changelist="d1f6a590-52ce-488e-9638-a63b0dbe5644" time="1400684256145" ignored="false" />
+    <file path="/background.js" changelist="d1f6a590-52ce-488e-9638-a63b0dbe5644" time="1400687191576" ignored="false" />
     <file path="/worker.js" changelist="d1f6a590-52ce-488e-9638-a63b0dbe5644" time="1400312964303" ignored="false" />
     <file path="$PROJECT_DIR$/../wxaudio/App/Lib/Action/IndexAction.class.php" changelist="d1f6a590-52ce-488e-9638-a63b0dbe5644" time="1400581223882" ignored="false" />
     <file path="$PROJECT_DIR$/../wxaudio/ThinkPHP/Extend/Engine/Sae/Common/runtime.php" changelist="d1f6a590-52ce-488e-9638-a63b0dbe5644" time="1400314169302" ignored="false" />
@@ -28,7 +30,7 @@
     <file path="/Wechat.php" changelist="d1f6a590-52ce-488e-9638-a63b0dbe5644" time="1400329275002" ignored="false" />
     <file path="$PROJECT_DIR$/../../sae/sexroute/2/App/Lib/Action/ChatServerAction.class.php" changelist="d1f6a590-52ce-488e-9638-a63b0dbe5644" time="1400329518995" ignored="false" />
     <file path="/ChatServerAction.class.php" changelist="d1f6a590-52ce-488e-9638-a63b0dbe5644" time="1400329431865" ignored="false" />
-    <file path="$PROJECT_DIR$/.idea/workspace.xml" changelist="d1f6a590-52ce-488e-9638-a63b0dbe5644" time="1400684758202" ignored="false" />
+    <file path="/manifest.json" changelist="d1f6a590-52ce-488e-9638-a63b0dbe5644" time="1400685271278" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,19 +70,19 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="background.js" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="background.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/background.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="315" column="78" selection-start="10748" selection-end="10748" vertical-scroll-proportion="-3.48">
+            <state line="326" column="50" selection-start="11144" selection-end="11144" vertical-scroll-proportion="0.8880597">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="manifest.json" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="manifest.json" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/manifest.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="4" column="14" selection-start="83" selection-end="93" vertical-scroll-proportion="0.14423077">
+            <state line="8" column="5" selection-start="244" selection-end="244" vertical-scroll-proportion="-4.375">
               <folding />
             </state>
           </provider>
@@ -115,8 +117,8 @@
       <list>
         <option value="$PROJECT_DIR$/main.js" />
         <option value="$PROJECT_DIR$/js/worker.js" />
-        <option value="$PROJECT_DIR$/js/background.js" />
         <option value="$PROJECT_DIR$/manifest.json" />
+        <option value="$PROJECT_DIR$/js/background.js" />
       </list>
     </option>
   </component>
@@ -300,7 +302,11 @@
       <created>1400684707693</created>
       <updated>1400684707693</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="[CHG] 基本解决内存泄露的问题，主要是worker线程的泄露">
+      <created>1400687385172</created>
+      <updated>1400687385173</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -369,7 +375,7 @@
     <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="false" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="[CHG] 内存泄露的初步处理，每次请求泄露2兆" />
+    <option name="LAST_COMMIT_MESSAGE" value="[CHG] 基本解决内存泄露的问题，主要是worker线程的泄露" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -400,6 +406,7 @@
     <MESSAGE value="[CHG] 基本成功" />
     <MESSAGE value="[CHG] 内存泄露的初步处理" />
     <MESSAGE value="[CHG] 内存泄露的初步处理，每次请求泄露2兆" />
+    <MESSAGE value="[CHG] 基本解决内存泄露的问题，主要是worker线程的泄露" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -507,16 +514,16 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/background.js">
+    <entry file="file://$PROJECT_DIR$/manifest.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="315" column="78" selection-start="10748" selection-end="10748" vertical-scroll-proportion="-3.48">
+        <state line="8" column="5" selection-start="244" selection-end="244" vertical-scroll-proportion="-4.375">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/manifest.json">
+    <entry file="file://$PROJECT_DIR$/js/background.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="4" column="14" selection-start="83" selection-end="93" vertical-scroll-proportion="0.14423077">
+        <state line="326" column="50" selection-start="11144" selection-end="11144" vertical-scroll-proportion="0.8880597">
           <folding />
         </state>
       </provider>

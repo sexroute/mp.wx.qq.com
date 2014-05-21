@@ -323,7 +323,9 @@ function InitUIWeixin()
                           //  console.log(loMsg.durl.msg);
                         }
 
-                        //2.回复用户
+                        oEvent.target.onmessage = null;
+                        oEvent.target.terminate();
+
 
                     }
 
