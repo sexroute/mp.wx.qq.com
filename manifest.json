@@ -12,7 +12,7 @@
    [
       {
          "js":["js/util.js","js/jquery-1.8.1.min.js","main.js"],
-         "matches": [ "<all_urls>"], 
+         "matches": [ "<all_urls>"],
          "run_at":"document_end",
          "all_frames": true
       }

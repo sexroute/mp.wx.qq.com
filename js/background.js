@@ -1,5 +1,3 @@
-var __gCuttDebug = true;
-var __gRequestWxMsgHeaders = [];
 var __gGetNewMsgNumHeaders = [];
 var __gTokenKey = "token";
 var __gDownloadTaskList = [];
@@ -173,11 +171,7 @@ function InitUIWeixin()
         {
             if (lbShouldReSendRequest)
             {
-                __gGetNewMsgNumHeaders = [];
-                for (var i = 0; i < details.requestHeaders.length; ++i)
-                {
-                    __gGetNewMsgNumHeaders.push(details.requestHeaders[i]);
-                }
+
                 chrome.tabs.sendMessage(details.tabId,
                 {
                     text: "get_new_msg_num",
@@ -287,10 +281,22 @@ function InitUIWeixin()
                     if (loMsg && loMsg.url)
                     {
                     		//1.取得回调参数
-                        loMsg.durl = JSON.parse(loMsg.durl);
+                        var lstrData = loMsg.durl;
+                        var loCallbackData = {
+                            text: "download",
+                            url: loMsg.url,
+                            saveAs: false,
+                            tag: loMsg.tag,
+                            user: loMsg.user,
+                            durl: null,
+                            fakeid:loMsg.fakeid,
+                            token:loMsg.token,
+                            tabid:loMsg.tabid
+                        }
+                        loCallbackData.durl = JSON.parse(lstrData);
                         for (i = 0; i < __gDownloadTaskList.length; i++)
                         {
-                            if (__gDownloadTaskList[i].url == loMsg.url)
+                            if (__gDownloadTaskList[i].url == loCallbackData.url)
                             {
                                 __gDownloadTaskList.splice(i, 1);
                                 lnMaxMsgId = localStorage["lastMsgId"];
@@ -305,16 +311,16 @@ function InitUIWeixin()
                                     chrome.tabs.sendMessage(msg.tabid,
                                         {
                                             text: "audio_downloaded",
-                                            data: loMsg
+                                            data: loCallbackData
                                         }, doStuffWithDOM);
-                                    localStorage["lastMsgId"] = loMsg.tag;
+                                    localStorage["lastMsgId"] = loCallbackData.tag;
                                 }
                                 break;
                             }
                         }
                         if(loMsg.durl.msg)
                         {
-                            console.log(loMsg.durl.msg);
+                          //  console.log(loMsg.durl.msg);
                         }
 
                         //2.回复用户

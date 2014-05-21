@@ -132,7 +132,7 @@ function nextStep(arrayBuffer, msg)
             if (xhr.status == 200)
             {
 
-                console.log(xhr.response);
+                //console.log(xhr.response);
                 msg.durl = xhr.response;
                 postMessage(msg);
             }
