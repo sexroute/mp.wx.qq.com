@@ -108,7 +108,7 @@ function getAudioMsgList(anToken)
 
 function CheckNewMsg(aoData)
 {
-    if(!IsCurrentInMsgList())
+    if(!IsCurrentInMsgList(g_TimeRefreshTime))
     {
         SimulateNavigateToMsg();
     }
@@ -158,8 +158,9 @@ function CheckNewMsg(aoData)
             }
         });
 }
-function IsCurrentInMsgList()
+function IsCurrentInMsgList(anTimeOut)
 {
+
     loUrl = $("#menu_message").find('a').attr('href');
     lstrCurrentUrl = window.location.href;
     if(typeof(loUrl)==  "undefined")
@@ -170,6 +171,7 @@ function IsCurrentInMsgList()
     {
         return true;
     }
+
     if(lstrCurrentUrl.indexOf(loUrl)<0)
     {
         loUrl =  loUrl.replace("count=20","count=10000");
@@ -180,15 +182,23 @@ function IsCurrentInMsgList()
         }
 
     }
+
+    if(anTimeOut>100*1000)
+    {
+        return false;
+    }
     return true;
 }
+var g_TimeRefreshTime = 0;
 function CheckMsgListTabTimerFunc()
 {
-    if(!IsCurrentInMsgList())
+
+    if(!IsCurrentInMsgList(g_TimeRefreshTime))
     {
         SimulateNavigateToMsg();
     }
     window.setTimeout(CheckMsgListTabTimerFunc,3000);
+    g_TimeRefreshTime += 3000;
 }
 
 function ResponseToUser(aoMsg)
