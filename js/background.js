@@ -98,16 +98,16 @@ function doStuffWithDOM(domContent)
 
 function responseuser(aoMsg)
 {
-	//mask=false&tofakeid=426795&imgcode=&type=1&content=%E6%B5%8B%E8%AF%95&quickreplyid=200148539&token=1005183144&lang=zh_CN&random=0.2941396983806044&f=json&ajax=1&t=ajax-response
+    //mask=false&tofakeid=426795&imgcode=&type=1&content=%E6%B5%8B%E8%AF%95&quickreplyid=200148539&token=1005183144&lang=zh_CN&random=0.2941396983806044&f=json&ajax=1&t=ajax-response
 }
 
 function OnClickMenu(info, tab)
 {
     var lstrUrl = tab.url;
     chrome.tabs.sendMessage(tab.id,
-    {
-        text: "dom_test"
-    }, doStuffWithDOM);
+        {
+            text: "dom_test"
+        }, doStuffWithDOM);
 }
 
 function getQueryVariable(astrParameters, variable)
@@ -131,12 +131,12 @@ function InitUIWeixin()
 {
     // chrome.contextMenus.removeAll();
     var radio1 = chrome.contextMenus.create(
-    {
-        "title": "微信测试",
-        "id": "wx",
-        "type": "normal",
-        "contexts": ["all"]
-    });
+        {
+            "title": "微信测试",
+            "id": "wx",
+            "type": "normal",
+            "contexts": ["all"]
+        });
 
     //1.menu     
     chrome.contextMenus.onClicked.addListener(OnClickMenu);
@@ -173,13 +173,13 @@ function InitUIWeixin()
             {
 
                 chrome.tabs.sendMessage(details.tabId,
-                {
-                    text: "get_new_msg_num",
-                    data:
                     {
-                        token: lstrToken
-                    }
-                }, doStuffWithDOM);
+                        text: "get_new_msg_num",
+                        data:
+                        {
+                            token: lstrToken
+                        }
+                    }, doStuffWithDOM);
             }
 
         }
@@ -206,9 +206,9 @@ function InitUIWeixin()
             }
             //3.2 get audio list
             chrome.tabs.sendMessage(tabId,
-            {
-                text: "get_audio_list"
-            }, doStuffWithDOM);
+                {
+                    text: "get_audio_list"
+                }, doStuffWithDOM);
 
         }
     });
@@ -230,20 +230,20 @@ function InitUIWeixin()
         {
             lstrFileName = loMsg.tag + ".mp3";
             suggest(
-            {
-                filename: lstrFileName,
-                conflict_action: 'overwrite',
-                conflictAction: 'overwrite'
-            });
+                {
+                    filename: lstrFileName,
+                    conflict_action: 'overwrite',
+                    conflictAction: 'overwrite'
+                });
         }
         else
         {
             suggest(
-            {
-                filename: item.filename,
-                conflict_action: 'overwrite',
-                conflictAction: 'overwrite'
-            });
+                {
+                    filename: item.filename,
+                    conflict_action: 'overwrite',
+                    conflictAction: 'overwrite'
+                });
         }
         // conflict_action was renamed to conflictAction in
         // http://src.chromium.org/viewvc/chrome?view=rev&revision=214133
@@ -267,7 +267,7 @@ function InitUIWeixin()
                                 text: "audio_downloading",
                                 data: msg
                             }, doStuffWithDOM);
-                       return;
+                        return;
                     }
                 }
                 __gDownloadTaskList.push(msg);
@@ -280,7 +280,7 @@ function InitUIWeixin()
                     loMsg = (oEvent.data);
                     if (loMsg && loMsg.url)
                     {
-                    		//1.取得回调参数
+                        //1.取得回调参数
                         var lstrData = loMsg.durl;
                         var loCallbackData = {
                             text: "download",
@@ -305,7 +305,7 @@ function InitUIWeixin()
                                     lnMaxMsgId = 0;
                                     localStorage["lastMsgId"] =0;
                                 }
-                               // if(loMsg.tag>= lnMaxMsgId)
+                                // if(loMsg.tag>= lnMaxMsgId)
                                 {
                                     //mark msg downloaded
                                     chrome.tabs.sendMessage(msg.tabid,
@@ -320,7 +320,7 @@ function InitUIWeixin()
                         }
                         if(loMsg.durl.msg)
                         {
-                          //  console.log(loMsg.durl.msg);
+                            //  console.log(loMsg.durl.msg);
                         }
 
                         oEvent.target.onmessage = null;
@@ -332,8 +332,8 @@ function InitUIWeixin()
                 };
 
                 worker.postMessage(msg);
-                //chrome.downloads.download({  url: msg.url,saveAs: msg.saveAs});
-            }
+
+            }//if (msg.text && msg.text == "download")
             else if (msg.text && msg.text == "downloadfinish")
             {
                 loMsg = null;
@@ -346,6 +346,32 @@ function InitUIWeixin()
                         break;
                     }
                 }
+            }else if (msg.text && msg.text == "checklogin")
+            {
+                chrome.cookies.get({ url: 'https://mp.weixin.qq.com', name: 'slave_sid' },
+                    function (cookie)
+                    {
+
+                        if (cookie)
+                        {
+                            chrome.tabs.sendMessage(msg.tabid,
+                                {
+                                    text: "done_checklogin",
+                                    data: 1
+                                }, doStuffWithDOM);
+
+                            console.log(cookie.value);
+                        }
+                        else
+                        {
+                            chrome.tabs.sendMessage(msg.tabid,
+                                {
+                                    text: "done_checklogin",
+                                    data: 0
+                                }, doStuffWithDOM);
+                        }
+                        g_loginChecking = false;
+                    });
             }
         }
     );

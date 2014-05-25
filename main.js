@@ -3,6 +3,8 @@ var __gMsgListId = "listContainer";
 var __gLastMsgId = localStorage["lastMsgId"];
 var __gDomain = "https://mp.weixin.qq.com/";
 var __gtoken = 0;
+var __gUserName = "sexroute";
+var __gPassword = "Q!W@E#R$T%";
 if (typeof (__gLastMsgId) == "undefined")
 {
     __gLastMsgId = 0;
@@ -106,6 +108,61 @@ function getAudioMsgList(anToken)
     StartDownloadAudioList(__gShouldTreatMsgList);
 }
 
+var g_loginChecking = false;
+var g_login = true;
+function BeginCheckLogin()
+{
+    g_loginChecking = true;
+
+    chrome.runtime.sendMessage(
+        {
+            text: "checklogin",
+            tabid:0
+        });
+
+    return g_login;
+}
+
+function CheckLogin()
+{
+    if(!g_loginChecking)
+    {
+        BeginCheckLogin();
+    }
+
+    return g_login;
+}
+
+function doLogin()
+{
+    //1.navigation
+    var $lstrCurrentUrl = window.location;
+    if(lstrCurrentUrl.indexOf("https://mp.weixin.qq.com/")==0)
+    {
+        if(lstrCurrentUrl !=  "https://mp.weixin.qq.com/")
+        {
+            window.location = "https://mp.weixin.qq.com/";
+        }
+    }
+    //2.set username password
+
+    var loUsername   = document.getElementById("account");
+    loUsername.value = __gUserName;
+
+    var loPassword = document.getElementById("password");
+    loPassword.value = __gPassword;
+    var evt0 = document.createEvent("MouseEvents");
+    evt0.initEvent("click", true, true);
+    loPassword.dispatchEvent(evt0);
+
+    //3.find button simulate press
+
+    var evt = document.createEvent("MouseEvents");
+    evt.initEvent("click", true, true);
+    document.getElementById("login_button").dispatchEvent(evt);
+
+}
+
 function CheckNewMsg(aoData)
 {
     if(!IsCurrentInMsgList(g_TimeRefreshTime))
@@ -160,6 +217,7 @@ function CheckNewMsg(aoData)
 }
 function IsCurrentInMsgList(anTimeOut)
 {
+    CheckLogin();
 
     loUrl = $("#menu_message").find('a').attr('href');
     lstrCurrentUrl = window.location.href;
@@ -185,7 +243,7 @@ function IsCurrentInMsgList(anTimeOut)
 
     if(anTimeOut>100*1000)
     {
-        return false;
+        //return false;
     }
     return true;
 }
@@ -261,5 +319,13 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse)
             ResponseToUser(loMsg);
         }
 
+    }else if(msg.text && (msg.text == "done_checklogin"))
+    {
+        g_loginChecking = false;
+        g_login = msg.data;
+        if(!g_login)
+        {
+            doLogin();
+        }
     }
 });
