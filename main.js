@@ -1,10 +1,12 @@
-﻿/* Listen for messages */
+/* Listen for messages */
 var __gMsgListId = "listContainer";
 var __gLastMsgId = localStorage["lastMsgId"];
 var __gDomain = "https://mp.weixin.qq.com/";
 var __gtoken = 0;
-var __gUserName = "sexroute";
-var __gPassword = "Q!W@E#R$T%";
+//var __gUserName = "sexroute";
+//var __gPassword = "Q!W@E#R$T%";
+var __gUserName = "tonia.xu@mattel.com";
+var __gPassword = "19911020k1222";
 if (typeof (__gLastMsgId) == "undefined")
 {
     __gLastMsgId = 0;
@@ -16,7 +18,13 @@ function SimulateNavigateToMsg()
     loUrl = $("#menu_message").find('a').attr('href');
     if(typeof(loUrl)!="undefined")
     {
-        loUrl =  loUrl.replace("count=20","count=10000");
+        loUrl =  loUrl.replace("count=20","count=1000");
+		loUrl =  loUrl.replace("filterivrmsg=1","filterivrmsg=0");
+		if(loUrl.indexOf("filterivrmsg=0")<0)
+		{
+			loUrl = loUrl + "&filterivrmsg=0";
+		}
+
     }
     window.location = (loUrl);
 }
@@ -67,10 +75,15 @@ function getAudioMsgList(anToken)
     if (loList)
     {
         __gShouldTreatMsgList = [];
+		var g_max_msg_id = 0;
         for (var i = loList.length; i >=0 ; i--)
         {
             $lstrClass = loList.attr('class');
-
+			var loID = loList.attr('data-id');
+			if(g_max_msg_id < loID)
+			{
+				g_max_msg_id = loID;
+			}
             loMsgObj = $(loList[i]);
             loDownloadObj = $(".icon18_common", loMsgObj);
             if (loDownloadObj.length > 0)
@@ -104,6 +117,13 @@ function getAudioMsgList(anToken)
             }
         }
     }
+	if(__gShouldTreatMsgList.length ==0)
+	{
+		if(g_max_msg_id!=0)
+		{
+			localStorage["lastMsgId"] = g_max_msg_id;
+		}
+	}
     console.log("msg to upload list length:%d", __gShouldTreatMsgList.length);
     StartDownloadAudioList(__gShouldTreatMsgList);
 }
@@ -232,8 +252,12 @@ function IsCurrentInMsgList(anTimeOut)
 
     if(lstrCurrentUrl.indexOf(loUrl)<0)
     {
-        loUrl =  loUrl.replace("count=20","count=10000");
-
+        loUrl =  loUrl.replace("count=20","count=1000");
+		loUrl =  loUrl.replace("filterivrmsg=1","filterivrmsg=0");
+		if(loUrl.indexOf("filterivrmsg=0")<0)
+		{
+			//loUrl = loUrl + "&filterivrmsg=0";
+		}
         if(lstrCurrentUrl.indexOf(loUrl)<0)
         {
             return false;
