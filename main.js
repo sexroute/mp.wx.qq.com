@@ -80,6 +80,11 @@ function getAudioMsgList(anToken)
         {
             $lstrClass = loList.attr('class');
 			var loID = loList.attr('data-id');
+            $loAudioMsg =  $(loList[i]).find(".audioBox");
+            if($loAudioMsg.length <=0)
+            {
+                continue;
+            }
 			if(g_max_msg_id < loID)
 			{
 				g_max_msg_id = loID;
