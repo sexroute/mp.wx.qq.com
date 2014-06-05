@@ -244,14 +244,18 @@ function IsCurrentInMsgList(anTimeOut)
 {
     CheckLogin();
 
-    loUrl = $("#menu_message").find('a').attr('href');
+    
     lstrCurrentUrl = window.location.href;
-    if(typeof(loUrl)==  "undefined")
+
+    if(lstrCurrentUrl.indexOf("mp.weixin.qq.com")<0)
     {
         return true;
     }
-    if(lstrCurrentUrl.indexOf("mp.weixin.qq.com")<0)
+	
+	loUrl = $("#menu_message").find('a').attr('href');
+	if(typeof(loUrl)==  "undefined")
     {
+		doLogin();
         return true;
     }
 
