@@ -16,6 +16,17 @@ var __gShouldTreatMsgList = [];
 function SimulateNavigateToMsg()
 {
     loUrl = $("#menu_message").find('a').attr('href');
+	loTest = $(".menu_item").find('a');
+	for(i=0;i<loTest.length;i++)
+	{
+	  lstrMenuItem = loTest[i].text;
+	  if(lstrMenuItem == "消息管理")
+	  {
+	    loUrl = loTest[i];
+		loUrl = loUrl.href;
+		break;
+	  }
+	}
     if(typeof(loUrl)!="undefined")
     {
         loUrl =  loUrl.replace("count=20","count=1000");
@@ -90,7 +101,8 @@ function getAudioMsgList(anToken)
 				g_max_msg_id = loID;
 			}
             loMsgObj = $(loList[i]);
-            loDownloadObj = $(".icon18_common", loMsgObj);
+            loDownloadObj = $(".icon18_common download_gray", loMsgObj);
+			loDownloadObj = loMsgObj.find("a.icon18_common.download_gray");
             if (loDownloadObj.length > 0)
             {
                 lnID = loDownloadObj.attr('idx');
@@ -253,6 +265,17 @@ function IsCurrentInMsgList(anTimeOut)
     }
 	
 	loUrl = $("#menu_message").find('a').attr('href');
+	loTest = $(".menu_item").find('a');
+	for(i=0;i<loTest.length;i++)
+	{
+	  lstrMenuItem = loTest[i].text;
+	  if(lstrMenuItem == "消息管理")
+	  {
+	    loUrl = loTest[i];
+		loUrl = loUrl.href;
+		break;
+	  }
+	}
 	if(typeof(loUrl)==  "undefined")
     {
 		doLogin();
