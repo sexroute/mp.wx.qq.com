@@ -319,6 +319,10 @@ function ResponseToUser(aoMsg)
 {
     var xmlHttp = new XMLHttpRequest();
     lnToken = localStorage["lastToken"];
+	if(aoMsg.durl.msg.length>140)
+	{
+	  aoMsg.durl.msg = aoMsg.durl.msg.replace("，快来赢取你的赞吧","");
+	}
     $lstrContent = "mask=false&tofakeid="+aoMsg.fakeid+"&imgcode=&type=1&content="+encodeURIComponent(aoMsg.durl.msg)+"&quickreplyid="+aoMsg.tag+"&token="+lnToken+"&lang=zh_CN&random="+ Math.random() +"&f=json&ajax=1&t=ajax-response";
     xmlHttp.open("POST", "https://mp.weixin.qq.com/cgi-bin/singlesend", true);
     xmlHttp.setRequestHeader("Content-Type","application/x-www-form-urlencoded;");  //用POST的时候一定要有
